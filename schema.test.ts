@@ -446,6 +446,22 @@ describe("validateSavedDeck", () => {
 		expect(result.selections).toEqual({});
 	});
 
+	it("accepts empty array selections", () => {
+		const result = validateSavedDeck({ config: minConfig, selections: { s1: [] } });
+		expect(result.selections).toEqual({ s1: [] });
+	});
+
+	it("accepts single-element array selection (distinct from string)", () => {
+		const result = validateSavedDeck({ config: minConfig, selections: { s1: ["A"] } });
+		expect(result.selections).toEqual({ s1: ["A"] });
+		expect(Array.isArray(result.selections.s1)).toBe(true);
+	});
+
+	it("preserves duplicate labels in array selection", () => {
+		const result = validateSavedDeck({ config: minConfig, selections: { s1: ["A", "A"] } });
+		expect(result.selections).toEqual({ s1: ["A", "A"] });
+	});
+
 	it("provides default savedAt when missing", () => {
 		const result = validateSavedDeck({ config: minConfig });
 		expect(result.savedAt).toBeTruthy();
