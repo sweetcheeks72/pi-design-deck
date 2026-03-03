@@ -48,6 +48,15 @@ Each slide supports an optional `columns` property (1, 2, or 3) to override the 
 
 Each slide supports an optional `context` property — a string displayed below the title that frames the decision for the user.
 
+Each slide supports an optional `multiSelect` property (boolean). When `true`:
+- Options use checkbox semantics instead of radio buttons (users can select multiple)
+- A "⚡ Select All" button appears above the options
+- Selections are stored as `string[]` instead of `string`
+- Summary shows selected options as tags
+- Keyboard shortcuts (1-9, Space, Enter) toggle instead of replace
+
+Use `multiSelect: true` when the user should be able to pick multiple or all options — for example, when options are composable features rather than mutually exclusive alternatives. Selections for multi-select slides are returned as arrays in the tool result.
+
 Each option must include:
 - `label`
 - Either `previewHtml` or `previewBlocks` (exactly one, not both)
