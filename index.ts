@@ -308,10 +308,19 @@ function attachDeckAbortHandler(signal: AbortSignal | undefined): void {
 	const abortHandler = () => {
 		if (!activeDeckServer) return;
 		const url = activeDeckServer.handle.url;
-		cleanupActiveDeckAndStoreResult({
-			content: [{ type: "text", text: "Design deck was aborted." }],
-			details: { status: "aborted", url },
-		});
+		// Keep the server running so the user can still submit selections.
+		// Don't call cleanupActiveDeck — the browser tab is likely still open.
+		// Just detach the resolve so the tool call can return, and arm the
+		// idle timer to eventually clean up if the user never submits.
+		if (activeDeckServer.currentResolve) {
+			const resolve = activeDeckServer.currentResolve;
+			activeDeckServer.currentResolve = null;
+			armDeckIdleTimer();
+			resolve({
+				content: [{ type: "text", text: "Design deck is still open in the browser. User selections will be captured when they submit. Call design_deck with any action to retrieve pending results." }],
+				details: { status: "aborted", url },
+			});
+		}
 	};
 	signal.addEventListener("abort", abortHandler, { once: true });
 }
@@ -653,7 +662,18 @@ export default function (pi: ExtensionAPI) {
 				return blockOnDeck();
 			}
 
-			pendingDeckResult = null;
+			// If a previous deck session captured results after abort, return them
+			// instead of starting a new deck. This handles the case where the user
+			// submitted selections after the tool call was aborted.
+			if (pendingDeckResult) {
+				const result = pendingDeckResult;
+				pendingDeckResult = null;
+				// Clean up the orphaned server if still running
+				if (activeDeckServer) {
+					cleanupActiveDeck("submitted");
+				}
+				return result;
+			}
 
 			if (activeDeckServer && p.action !== "export") {
 				return {
