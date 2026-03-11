@@ -676,15 +676,21 @@ export default function (pi: ExtensionAPI) {
 			}
 
 			if (activeDeckServer && p.action !== "export") {
-				return {
-					content: [
-						{
-							type: "text",
-							text: "A design deck is already active. Complete or cancel it before starting another.",
-						},
-					],
-					details: { status: "error", url: activeDeckServer.handle.url },
-				};
+				// If nobody is waiting for results (e.g., previous call was aborted),
+				// auto-cleanup the orphaned session so the user can start a new deck.
+				if (!activeDeckServer.currentResolve) {
+					cleanupActiveDeck("replaced");
+				} else {
+					return {
+						content: [
+							{
+								type: "text",
+								text: "A design deck is already active. Complete or cancel it before starting another.",
+							},
+						],
+						details: { status: "error", url: activeDeckServer.handle.url },
+					};
+				}
 			}
 
 			const settings = loadSettings();

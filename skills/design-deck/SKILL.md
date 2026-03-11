@@ -9,6 +9,8 @@ description: Present visual options for architecture, UI, and code decisions wit
 
 Use this skill when the task requires presenting multiple visual directions and collecting explicit user choices. Load this skill before building any deck to get the full format reference.
 
+This includes UX/design review sessions: if the user is reviewing wireframes, mock screens, or alternative UX flows, route that review to `design_deck` / slideshow mode rather than plain chat.
+
 **Design deck vs interview:** The design deck is for *visual* comparisons — rendered UI mockups, architecture diagrams, syntax-highlighted code, images. If the options are just text, use `interview` with `single`-type questions instead. It's faster, doesn't open a browser, and displays text natively. The deck adds value only when you need to *see* the difference, not just read it.
 
 ## Entry Points

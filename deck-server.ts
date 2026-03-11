@@ -62,7 +62,7 @@ const MIME_TYPES: Record<string, string> = {
 	".avif": "image/avif",
 };
 
-const ABANDONED_GRACE_MS = 60000;
+const ABANDONED_GRACE_MS = 180_000;
 const WATCHDOG_INTERVAL_MS = 5000;
 const GENERATE_TIMEOUT_MS = 90_000;
 
@@ -664,8 +664,20 @@ export async function startDeckServer(
 			registerSession(sessionEntry);
 
 			if (!watchdog) {
+				const serverStartedAt = Date.now();
+				const BROWSER_CONNECT_TIMEOUT_MS = 30_000; // 30s to load the page
 				watchdog = setInterval(() => {
-					if (completed || !browserConnected) return;
+					if (completed) return;
+					// If browser never connected, give it 30 seconds then cancel
+					if (!browserConnected) {
+						if (Date.now() - serverStartedAt > BROWSER_CONNECT_TIMEOUT_MS) {
+							if (!markCompleted()) return;
+							unregisterSession(sessionId);
+							pushEvent("deck-close", { reason: "stale" });
+							setImmediate(() => callbacks.onCancel("stale"));
+						}
+						return;
+					}
 					if (Date.now() - lastHeartbeatAt <= ABANDONED_GRACE_MS) return;
 					if (!markCompleted()) return;
 					unregisterSession(sessionId);

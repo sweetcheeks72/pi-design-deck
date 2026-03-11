@@ -41,7 +41,7 @@ interface SessionsData {
 }
 
 const SESSIONS_FILE = join(homedir(), ".pi", "deck-sessions.json");
-const STALE_PRUNE_MS = 60000;
+const STALE_PRUNE_MS = 180_000;
 
 function ensurePiDir(): void {
 	const piDir = join(homedir(), ".pi");

@@ -247,7 +247,16 @@ function startHeartbeat() {
 	};
 
 	ping();
-	heartbeatTimer = setInterval(ping, 5000);
+	heartbeatTimer = setInterval(ping, 10000);
+
+	// Chrome throttles background tab timers to ~60s+.
+	// Send an immediate heartbeat when the tab becomes visible again
+	// to prevent the server watchdog from declaring us stale.
+	document.addEventListener("visibilitychange", () => {
+		if (!document.hidden && !isClosed) {
+			ping();
+		}
+	});
 }
 
 // ─── GENERATE MORE ───────────────────────────────────────────
@@ -478,6 +487,15 @@ function connectEvents() {
 				showSaveToast("Regeneration failed", true);
 			}
 		}
+	});
+
+	events.addEventListener("error", () => {
+		if (isClosed) return;
+		// SSE disconnected — try to reconnect after a brief delay
+		closeEvents();
+		setTimeout(() => {
+			if (!isClosed) connectEvents();
+		}, 2000);
 	});
 
 	events.addEventListener("deck-close", (event) => {
