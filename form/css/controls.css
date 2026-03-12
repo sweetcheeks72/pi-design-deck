@@ -22,8 +22,8 @@
   transition: border-color 0.2s, color 0.2s, background 0.2s; flex-shrink: 0;
 }
 .btn-gen-more:hover {
-  border-color: rgba(138,190,183,0.3); color: var(--dk-accent-text);
-  background: rgba(138,190,183,0.04);
+  border-color: rgba(34,211,238,0.3); color: var(--dk-accent-text);
+  background: rgba(34,211,238,0.04);
 }
 .btn-gen-more:disabled { opacity: 0.3; cursor: not-allowed; }
 
@@ -43,7 +43,7 @@
   text-align: center;
   min-width: 32px;
 }
-.gen-count:focus { outline: none; border-color: rgba(138,190,183,0.4); background: rgba(138,190,183,0.1); }
+.gen-count:focus { outline: none; border-color: rgba(34,211,238,0.4); background: rgba(34,211,238,0.1); }
 .gen-count:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .gen-count-label {
@@ -75,10 +75,10 @@
   font-size: 14px; line-height: 1;
 }
 .btn-gen-more.loading .btn-gen-plus {
-  border-color: rgba(138,190,183,0.4); border-top-color: #8abeb7;
+  border-color: rgba(34,211,238,0.4); border-top-color: var(--dk-accent);
   animation: spin 0.8s linear infinite;
 }
-.btn-gen-more.loading { color: var(--dk-accent-text); border-color: rgba(138,190,183,0.2); pointer-events: none; }
+.btn-gen-more.loading { color: var(--dk-accent-text); border-color: rgba(34,211,238,0.2); pointer-events: none; }
 .gen-prompt {
   flex: 1; min-width: 0; max-width: 360px;
   padding: 7px 12px; border-radius: 8px;
@@ -90,7 +90,7 @@
 }
 .gen-prompt::placeholder { color: var(--dk-text-placeholder); }
 .gen-prompt:focus {
-  border-color: rgba(138,190,183,0.3);
+  border-color: rgba(34,211,238,0.3);
   background: rgba(var(--dk-ink),0.08);
 }
 .gen-prompt:disabled { opacity: 0.3; }
@@ -115,7 +115,7 @@
 
 /* Skeleton shimmer placeholder */
 .option-skeleton {
-  border: 2px dashed rgba(138,190,183,0.12);
+  border: 2px dashed rgba(34,211,238,0.12);
   border-radius: 12px; overflow: hidden;
   background: var(--dk-surface);
   min-height: 300px;
@@ -164,7 +164,7 @@
 }
 
 .regen-skeleton {
-  border: 2px dashed rgba(138,190,183,0.15);
+  border: 2px dashed rgba(34,211,238,0.15);
   border-radius: 12px;
   background: var(--dk-surface);
   min-height: 280px;
@@ -213,7 +213,7 @@
 .regen-status::before {
   content: '';
   width: 14px; height: 14px;
-  border: 2px solid rgba(138,190,183,0.2);
+  border: 2px solid rgba(34,211,238,0.2);
   border-top-color: var(--dk-accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -286,8 +286,8 @@
   border-color: rgba(var(--dk-ink),0.2); color: var(--dk-text);
 }
 .model-pill.active {
-  background: rgba(138,190,183,0.12);
-  border-color: rgba(138,190,183,0.3);
+  background: rgba(34,211,238,0.12);
+  border-color: rgba(34,211,238,0.3);
   color: var(--dk-accent-text);
 }
 .model-pill:focus-visible {
@@ -309,10 +309,10 @@
   display: flex; justify-content: space-between; align-items: center;
 }
 .model-list-item:hover {
-  background: rgba(138,190,183,0.06); color: var(--dk-text);
+  background: rgba(34,211,238,0.06); color: var(--dk-text);
 }
 .model-list-item.selected {
-  background: rgba(138,190,183,0.1);
+  background: rgba(34,211,238,0.1);
   color: var(--dk-accent-text);
   border-left-color: var(--dk-accent);
 }
@@ -321,7 +321,7 @@
 }
 .model-tag {
   font-size: 9px; padding: 1px 6px; border-radius: 4px;
-  background: rgba(138,190,183,0.12); color: var(--dk-accent);
+  background: rgba(34,211,238,0.12); color: var(--dk-accent);
 }
 .thinking-row {
   display: flex; align-items: center; gap: 8px; padding: 2px 0;
@@ -448,9 +448,9 @@
 }
 
 .deck-save-btn:hover {
-  border-color: rgba(138,190,183,0.28);
+  border-color: rgba(34,211,238,0.28);
   color: var(--dk-accent-text);
-  background: rgba(138,190,183,0.08);
+  background: rgba(34,211,238,0.08);
 }
 
 .deck-save-btn.dirty {
@@ -538,7 +538,7 @@
 
 .btn-select-all:hover {
   background: var(--dk-accent);
-  color: var(--dk-accent-text, #fff);
+  color: var(--dk-accent-on, #020914);
   border-color: var(--dk-accent);
 }
 
@@ -580,5 +580,5 @@
 }
 
 [data-theme="light"] .btn-select-all { background: #f0f0f0; border-color: #d0d0d0; }
-[data-theme="light"] .btn-select-all:hover { background: var(--dk-accent); color: #fff; }
+[data-theme="light"] .btn-select-all:hover { background: var(--dk-accent); color: var(--dk-accent-on, #ffffff); }
 [data-theme="light"] .summary-tag { background: #f5f5f5; border-color: #e0e0e0; }
