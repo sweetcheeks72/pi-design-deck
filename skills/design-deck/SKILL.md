@@ -263,7 +263,39 @@ Don't just stack blocks for completeness. Each block should add information the 
 
 The tool returns selections as a map of `slideId -> selected option label`.
 
-Use these selections as the implementation contract for the final build.
+Use these selections as the **implementation contract** for the final build.
+
+### Contract Enforcement Protocol
+
+When building specs, plans, or HTML artifacts after a deck submission:
+
+1. **Read the snapshot** — after deck submission, read the saved snapshot from `~/.pi/deck-snapshots/<deck-id>/deck.json`. The snapshot preserves the full `previewHtml` for every option on every slide.
+
+2. **Extract selected previewHtml** — for each slide, find the option whose `label` matches the selection and extract its `previewHtml` verbatim. This HTML *is* the visual spec.
+
+3. **Embed unchanged** — when creating specs, plans, or HTML artifacts that reference the selected design, embed the exact `previewHtml`. Do NOT reconstruct the design from memory. Do NOT mix elements from different options. The user chose *all the details* when they chose the option — layout, labels, commands, color tokens, spacing, everything.
+
+4. **Deviation = bug** — any element in a spec or artifact that came from a NON-selected option is a fidelity violation. If the selected option shows `:send :retry :skip :pause :logs` as the command palette, the spec must show exactly those commands — not `:send :retry :skip :pause :logs :checkpoint` borrowed from another option.
+
+5. **Audit trail** — when writing a spec that references deck selections, include:
+   ```html
+   <!-- deck: <snapshot-folder-name>, slide: <slide-id>, selected: "<option-label>" -->
+   ```
+
+6. **Contract file** — after deck submission, write a contract file to `specs/deck-contract-<deck-id>.md` containing:
+   - Each slide's selected option label
+   - The verbatim `previewHtml` for each selection (in a fenced HTML block)
+   - Key constraints extracted from the option's `description` and `aside`
+   - The snapshot path for future reference
+
+   Planners and workers should reference this contract file, not their memory of the deck session.
+
+### Reviewer Fidelity Check
+
+When reviewing artifacts that reference design deck selections:
+- Compare embedded HTML against the saved `previewHtml` in the snapshot
+- Flag any elements (commands, labels, sections, layout patterns) that appear in NON-selected options
+- Check that the contract file exists and is referenced
 
 ## Generate-More Loop
 
